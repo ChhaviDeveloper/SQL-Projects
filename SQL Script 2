@@ -1,6 +1,7 @@
 **--2) calculate how many users and how many sessions were at each quarter
 --return first day of qurter, user_cnt, session_cnt**
 
+
 select datepart(quarter,login_timestamp) as quarter,count(DISTINCT user_id) as user_cnt, count(*) as sesiion_cnt
 from logins
 group by datepart(quarter,login_timestamp)
