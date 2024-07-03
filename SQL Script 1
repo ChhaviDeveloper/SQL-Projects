@@ -1,9 +1,8 @@
---management wants to see all the users that did not login in the past 5 months
-
+**--1) management wants to see all the users that did not login in the past 5 months
 
 --5 months back the date would be 2024-02-02 10:36:55
 --so we need to find the users who logged in before this date time 
----first we will get the max and latest login date time for each user and compare that with above date 
+---first we will get the max and latest login date time for each user and compare that with above date**
 
 select user_id, max(login_timestamp)--dateadd(month,-5,getdate()) 
 from logins
@@ -16,3 +15,29 @@ select * from logins
 select distinct user_id from logins where user_id not in (
   select user_id from logins where login_timestamp > dateadd(month,-5,getdate())
 )
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+**--2) calculate how many users and how many sessions were at each quarter
+--return first day of qurter, user_cnt, session_cnt**
+
+
+select datepart(quarter,login_timestamp) as quarter,count(DISTINCT user_id) as user_cnt, count(*) as sesiion_cnt
+from logins
+group by datepart(quarter,login_timestamp)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+**--3) display all the users who logged in January 2024 but did not logged in November 2023 
+--output--1,3,5 
+
+--user who logged in Jan 2024
+--1,2,3,5
+--user who logged in Nov 2023
+--2,4,6,7 **
+
+select distinct user_id
+from logins
+where login_timestamp BETWEEN '2024-01-01' and '2024-01-31' and 
+user_id not in (select user_id from logins where login_timestamp BETWEEN '2023-11-01' and '2023-11-30')
+--output - 1,3,5
